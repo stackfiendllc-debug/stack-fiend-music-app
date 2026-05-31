@@ -1,18 +1,37 @@
 const SUPABASE_URL = "https://wtetpifsildutbomreds.supabase.co";
+
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZXRwaWZzaWxkdXRib21yZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTk4NTcsImV4cCI6MjA5NTgzNTg1N30.rMCPUyF-dVmKaUAtGSVKfbz4BhI4NxxEwXxgWe2Fg0w";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let selectedRole = "listener";
 
 function showSignupForm() {
   document.getElementById("auth-section").classList.add("hidden");
   document.getElementById("signup-details").classList.remove("hidden");
 }
 
+function selectRole(role) {
+  selectedRole = role;
+}
+
+function validatePassword(password) {
+  return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(password);
+}
+
 async function completeSignup() {
-  const email = document.getElementById("email").value;
+  const email = email.value;
   const password = document.getElementById("password").value;
 
-  const { error } = await supabase.auth.signUp({
+  if (!validatePassword(password)) {
+    alert("Password needs capital, number, symbol.");
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signUp({
     email,
     password
   });
@@ -22,19 +41,23 @@ async function completeSignup() {
     return;
   }
 
-  alert("Signup complete. Login now.");
+  await supabase.from("users").insert([
+    {
+      id: data.user.id,
+      full_name: fullName.value,
+      username: username.value,
+      role: selectedRole,
+      approved: selectedRole === "listener"
+    }
+  ]);
 
-  document.getElementById("signup-details").classList.add("hidden");
-  document.getElementById("auth-section").classList.remove("hidden");
+  alert("Check email to confirm account.");
 }
 
 async function signIn() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
   const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
+    email: email.value,
+    password: password.value
   });
 
   if (error) {
@@ -42,34 +65,34 @@ async function signIn() {
     return;
   }
 
-  document.getElementById("auth-section").classList.add("hidden");
-  document.getElementById("tracks-section").classList.remove("hidden");
-  document.getElementById("upload-section").classList.remove("hidden");
+  auth-section.classList.add("hidden");
+  signup-details.classList.add("hidden");
+  tracks-section.classList.remove("hidden");
 
   loadTracks();
 }
 
+async function googleLogin() {
+  await supabase.auth.signInWithOAuth({
+    provider: "google"
+  });
+}
+
+async function appleLogin() {
+  await supabase.auth.signInWithOAuth({
+    provider: "apple"
+  });
+}
+
 async function uploadTrack() {
-  const file = document.getElementById("musicFile").files[0];
-  const title = document.getElementById("trackTitle").value;
+  const file = musicFile.files[0];
 
-  if (!file) {
-    alert("Select a music file");
-    return;
-  }
+  if (!file) return;
 
-  const fileName = `${Date.now()}-${file.name}`;
-
-  const { error } = await supabase.storage
+  await supabase.storage
     .from("music")
-    .upload(fileName, file);
+    .upload(Date.now() + file.name, file);
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  alert("Track uploaded");
   loadTracks();
 }
 
@@ -82,4 +105,11 @@ async function loadTracks() {
   trackList.innerHTML = "";
 
   data.forEach(track => {
-    const div = document
+    trackList.innerHTML += `
+      <div class="track-card">
+        <p>${track.name}</p>
+        <audio controls src="${SUPABASE_URL}/storage/v1/object/public/music/${track.name}"></audio>
+      </div>
+    `;
+  });
+}
