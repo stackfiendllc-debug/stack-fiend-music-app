@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stack Fiend Music</title>
+
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
@@ -12,26 +13,50 @@
 <div class="container">
 
   <header>
-    <img src="logo1.png" class="logo" />
+    <img src="logo1.png" class="logo" alt="Stack Fiend Logo">
     <h1>STACK FIEND MUSIC</h1>
+    <p class="tagline">Independent Sound. Real Artists. Real Movement.</p>
   </header>
 
+  <!-- LOGIN SCREEN -->
   <section id="auth-section">
-    <input type="email" id="email" placeholder="Email" />
+    <h2>Enter The Platform</h2>
+
+    <input type="email" id="email" placeholder="Email Address" />
     <input type="password" id="password" placeholder="Password" />
-    <button onclick="signUp()">Sign Up</button>
+
+    <button onclick="showSignupForm()">Create Account</button>
     <button onclick="signIn()">Login</button>
   </section>
 
-  <section id="upload-section" class="hidden">
-    <h2>Upload Music</h2>
-    <input type="text" id="trackTitle" placeholder="Track Title" />
-    <input type="file" id="musicFile" accept="audio/*" />
-    <button onclick="uploadTrack()">Upload</button>
+  <!-- SIGNUP DETAILS -->
+  <section id="signup-details" class="hidden">
+    <h2>Create Your Profile</h2>
+
+    <input type="text" id="fullName" placeholder="Full Name" />
+    <input type="text" id="username" placeholder="Username" />
+
+    <select id="role">
+      <option value="listener">Listener</option>
+      <option value="artist">Artist</option>
+    </select>
+
+    <button onclick="completeSignup()">Complete Signup</button>
   </section>
 
-  <section id="tracks-section">
-    <h2>Music Feed</h2>
+  <!-- UPLOAD SECTION -->
+  <section id="upload-section" class="hidden">
+    <h2>Upload Your Music</h2>
+
+    <input type="text" id="trackTitle" placeholder="Track Title" />
+    <input type="file" id="musicFile" accept="audio/*" />
+
+    <button onclick="uploadTrack()">Upload Track</button>
+  </section>
+
+  <!-- MUSIC FEED -->
+  <section id="tracks-section" class="hidden">
+    <h2>Stack Fiend Catalog</h2>
     <div id="trackList"></div>
   </section>
 
@@ -39,5 +64,6 @@
 
 <script src="supabase.js"></script>
 <script src="app.js"></script>
+
 </body>
 </html>
