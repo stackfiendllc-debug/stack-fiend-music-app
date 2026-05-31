@@ -16,6 +16,7 @@ function showSignupForm() {
 
 function selectRole(role) {
   selectedRole = role;
+  alert(role + " selected");
 }
 
 function validatePassword(password) {
@@ -23,11 +24,13 @@ function validatePassword(password) {
 }
 
 async function completeSignup() {
-  const email = email.value;
+  const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
+  const fullName = document.getElementById("fullName").value;
+  const username = document.getElementById("username").value;
 
   if (!validatePassword(password)) {
-    alert("Password needs capital, number, symbol.");
+    alert("Password needs uppercase, number, symbol.");
     return;
   }
 
@@ -44,20 +47,23 @@ async function completeSignup() {
   await supabase.from("users").insert([
     {
       id: data.user.id,
-      full_name: fullName.value,
-      username: username.value,
+      full_name: fullName,
+      username,
       role: selectedRole,
       approved: selectedRole === "listener"
     }
   ]);
 
-  alert("Check email to confirm account.");
+  alert("Signup complete. Confirm email.");
 }
 
 async function signIn() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
   const { error } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value
+    email,
+    password
   });
 
   if (error) {
@@ -65,9 +71,9 @@ async function signIn() {
     return;
   }
 
-  auth-section.classList.add("hidden");
-  signup-details.classList.add("hidden");
-  tracks-section.classList.remove("hidden");
+  document.getElementById("auth-section").classList.add("hidden");
+  document.getElementById("signup-details").classList.add("hidden");
+  document.getElementById("tracks-section").classList.remove("hidden");
 
   loadTracks();
 }
@@ -85,13 +91,16 @@ async function appleLogin() {
 }
 
 async function uploadTrack() {
-  const file = musicFile.files[0];
+  const file = document.getElementById("musicFile").files[0];
 
-  if (!file) return;
+  if (!file) {
+    alert("Select a file");
+    return;
+  }
 
   await supabase.storage
     .from("music")
-    .upload(Date.now() + file.name, file);
+    .upload(Date.now() + "-" + file.name, file);
 
   loadTracks();
 }
@@ -102,6 +111,7 @@ async function loadTracks() {
     .list();
 
   const trackList = document.getElementById("trackList");
+
   trackList.innerHTML = "";
 
   data.forEach(track => {
