@@ -1,64 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stack Fiend Music</title>
-
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
 
 <div class="container">
 
-  <header>
-    <img src="logo1.png" class="logo" alt="Stack Fiend Logo">
-    <h1>STACK FIEND MUSIC</h1>
-    <p class="tagline">Independent Sound. Real Artists. Real Movement.</p>
-  </header>
+<header>
+  <img src="logo1.png" class="logo">
+  <h1>STACK FIEND MUSIC</h1>
+</header>
 
-  <!-- LOGIN SCREEN -->
-  <section id="auth-section">
-    <h2>Enter The Platform</h2>
+<section id="auth-section">
+  <input type="email" id="email" placeholder="Email">
 
-    <input type="email" id="email" placeholder="Email Address" />
-    <input type="password" id="password" placeholder="Password" />
+  <input type="password" id="password"
+    placeholder="Strong Password">
 
-    <button onclick="showSignupForm()">Create Account</button>
-    <button onclick="signIn()">Login</button>
-  </section>
+  <button onclick="showSignupForm()">Create Account</button>
+  <button onclick="signIn()">Login</button>
 
-  <!-- SIGNUP DETAILS -->
-  <section id="signup-details" class="hidden">
-    <h2>Create Your Profile</h2>
+  <button onclick="googleLogin()">Google Login</button>
+  <button onclick="appleLogin()">Apple Login</button>
+</section>
 
-    <input type="text" id="fullName" placeholder="Full Name" />
-    <input type="text" id="username" placeholder="Username" />
+<section id="signup-details" class="hidden">
+  <input type="text" id="fullName" placeholder="Full Name">
+  <input type="text" id="username" placeholder="Username">
 
-    <select id="role">
-      <option value="listener">Listener</option>
-      <option value="artist">Artist</option>
-    </select>
+  <input type="file" id="profileImage" accept="image/*">
 
-    <button onclick="completeSignup()">Complete Signup</button>
-  </section>
+  <button onclick="selectRole('listener')">Listener</button>
+  <button onclick="selectRole('artist')">Stack Fiend Artist</button>
 
-  <!-- UPLOAD SECTION -->
-  <section id="upload-section" class="hidden">
-    <h2>Upload Your Music</h2>
+  <button onclick="completeSignup()">Confirm Signup</button>
+</section>
 
-    <input type="text" id="trackTitle" placeholder="Track Title" />
-    <input type="file" id="musicFile" accept="audio/*" />
+<section id="upload-section" class="hidden">
+  <input type="text" id="trackTitle" placeholder="Track Title">
+  <input type="file" id="musicFile" accept="audio/*">
+  <button onclick="uploadTrack()">Upload</button>
+</section>
 
-    <button onclick="uploadTrack()">Upload Track</button>
-  </section>
-
-  <!-- MUSIC FEED -->
-  <section id="tracks-section" class="hidden">
-    <h2>Stack Fiend Catalog</h2>
-    <div id="trackList"></div>
-  </section>
+<section id="tracks-section" class="hidden">
+  <div id="trackList"></div>
+</section>
 
 </div>
 
