@@ -7,42 +7,50 @@
 body {
   font-family: Arial, sans-serif;
   min-height: 100vh;
-  color: #fff;
+  color: white;
   background:
-    linear-gradient(rgba(0,0,0,.88), rgba(0,0,0,.92)),
-    url("logo1.png") center center/70% no-repeat fixed,
+    linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.94)),
+    url("logo1.png") center center/65% no-repeat fixed,
     #000;
 }
 
 .container {
-  padding: 20px;
   max-width: 1100px;
   margin: auto;
+  padding: 20px;
 }
 
 header {
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 40px;
+  margin: 30px 0 50px;
 }
 
 .logo {
   width: 180px;
-  filter: drop-shadow(0 0 20px #00ff66);
-  animation: pulse 3s infinite;
+  filter: drop-shadow(0 0 25px #00ff66);
+  animation: pulse 3s infinite ease-in-out;
 }
 
 h1 {
-  font-size: 2.4rem;
   margin-top: 15px;
+  font-size: 2.6rem;
   color: #00ff66;
-  text-shadow: 0 0 18px #00ff66;
-  letter-spacing: 3px;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px #00ff66;
+}
+
+.tagline {
+  color: gold;
+  margin-top: 10px;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  opacity: 0.95;
 }
 
 h2 {
   color: gold;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 #auth-section,
@@ -55,7 +63,7 @@ h2 {
   margin-bottom: 30px;
   box-shadow:
     0 0 25px rgba(0,255,102,.35),
-    inset 0 0 25px rgba(0,255,102,.08);
+    inset 0 0 20px rgba(0,255,102,.08);
   backdrop-filter: blur(10px);
 }
 
@@ -72,7 +80,7 @@ input {
 
 input:focus {
   outline: none;
-  box-shadow: 0 0 15px #00ff66;
+  box-shadow: 0 0 18px #00ff66;
 }
 
 button {
@@ -82,16 +90,16 @@ button {
   border: none;
   border-radius: 14px;
   background: linear-gradient(135deg, #00ff66, gold);
-  color: #000;
-  font-weight: bold;
+  color: black;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: .3s;
+  transition: all .3s ease;
 }
 
 button:hover {
   transform: scale(1.03);
-  box-shadow: 0 0 18px #00ff66;
+  box-shadow: 0 0 20px #00ff66;
 }
 
 .track {
@@ -110,7 +118,7 @@ button:hover {
 
 audio {
   width: 100%;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .hidden {
@@ -118,7 +126,30 @@ audio {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 15px #00ff66);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 30px gold);
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 15px #00ff66);
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .logo {
+    width: 140px;
+  }
+
+  .container {
+    padding: 15px;
+  }
 }
