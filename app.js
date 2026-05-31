@@ -1,63 +1,18 @@
-let pendingEmail = "";
-let pendingPassword = "";
-let currentUser = null;
+const SUPABASE_URL = "https://wtetpifsildutbomreds.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZXRwaWZzaWxkdXRib21yZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTk4NTcsImV4cCI6MjA5NTgzNTg1N30.rMCPUyF-dVmKaUAtGSVKfbz4BhI4NxxEwXxgWe2Fg0w";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 function showSignupForm() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  if (!email || !password) {
-    alert("Enter email and password first");
-    return;
-  }
-
-  pendingEmail = email;
-  pendingPassword = password;
-
   document.getElementById("auth-section").classList.add("hidden");
   document.getElementById("signup-details").classList.remove("hidden");
 }
 
 async function completeSignup() {
-  const fullName = document.getElementById("fullName").value.trim();
-  const username = document.getElementById("username").value.trim();
-  const role = document.getElementById("role").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  if (!fullName || !username) {
-    alert("Fill out all profile details");
-    return;
-  }
-
-  const { data, error } = await supabase.auth.signUp({
-    email: pendingEmail,
-    password: pendingPassword
-  });
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  await supabase.from("profiles").insert([
-    {
-      id: data.user.id,
-      full_name: fullName,
-      username,
-      role
-    }
-  ]);
-
-  alert("Account created. Login now.");
-
-  document.getElementById("signup-details").classList.add("hidden");
-  document.getElementById("auth-section").classList.remove("hidden");
-}
-
-async function signIn() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signUp({
     email,
     password
   });
@@ -67,49 +22,64 @@ async function signIn() {
     return;
   }
 
-  currentUser = data.user;
+  alert("Signup complete. Login now.");
+
+  document.getElementById("signup-details").classList.add("hidden");
+  document.getElementById("auth-section").classList.remove("hidden");
+}
+
+async function signIn() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
   document.getElementById("auth-section").classList.add("hidden");
-  document.getElementById("upload-section").classList.remove("hidden");
   document.getElementById("tracks-section").classList.remove("hidden");
+  document.getElementById("upload-section").classList.remove("hidden");
 
   loadTracks();
 }
 
 async function uploadTrack() {
   const file = document.getElementById("musicFile").files[0];
-  const title = document.getElementById("trackTitle").value.trim();
+  const title = document.getElementById("trackTitle").value;
 
-  if (!file || !title) return alert("Add title and file");
+  if (!file) {
+    alert("Select a music file");
+    return;
+  }
 
   const fileName = `${Date.now()}-${file.name}`;
 
-  await supabase.storage.from("music").upload(fileName, file);
+  const { error } = await supabase.storage
+    .from("music")
+    .upload(fileName, file);
 
-  const { data } = supabase.storage.from("music").getPublicUrl(fileName);
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
-  await supabase.from("tracks").insert([
-    { title, file_url: data.publicUrl }
-  ]);
-
+  alert("Track uploaded");
   loadTracks();
 }
 
 async function loadTracks() {
-  const { data } = await supabase
-    .from("tracks")
-    .select("*")
-    .order("id", { ascending: false });
+  const { data } = await supabase.storage
+    .from("music")
+    .list();
 
   const trackList = document.getElementById("trackList");
   trackList.innerHTML = "";
 
   data.forEach(track => {
-    trackList.innerHTML += `
-      <div class="track">
-        <h3>${track.title}</h3>
-        <audio controls src="${track.file_url}"></audio>
-      </div>
-    `;
-  });
-}
+    const div = document
