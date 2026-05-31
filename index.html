@@ -1,1 +1,43 @@
-.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stack Fiend Music</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <img src="logo1.png" class="logo" />
+    <h1>STACK FIEND MUSIC</h1>
+  </header>
+
+  <section id="auth-section">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="signIn()">Login</button>
+  </section>
+
+  <section id="upload-section" class="hidden">
+    <h2>Upload Music</h2>
+    <input type="text" id="trackTitle" placeholder="Track Title" />
+    <input type="file" id="musicFile" accept="audio/*" />
+    <button onclick="uploadTrack()">Upload</button>
+  </section>
+
+  <section id="tracks-section">
+    <h2>Music Feed</h2>
+    <div id="trackList"></div>
+  </section>
+
+</div>
+
+<script src="supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
