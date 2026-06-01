@@ -2,200 +2,89 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
 }
 
 body {
-  background: linear-gradient(135deg, #000000, #111111, #1a0000);
+  background: #000;
   color: white;
-  min-height: 100vh;
-  overflow-x: hidden;
+  font-family: Arial;
 }
 
-/* Background Glow */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at top right, rgba(255,0,0,0.18), transparent 40%),
-              radial-gradient(circle at bottom left, rgba(255,0,0,0.12), transparent 40%);
-  z-index: -1;
-}
-
-/* Screens */
 .screen {
-  min-height: 100vh;
   display: none;
+  min-height: 100vh;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
-/* Auth Card */
 .auth-container {
-  width: 100%;
+  width: 90%;
   max-width: 420px;
-  background: rgba(15, 15, 15, 0.95);
-  border: 1px solid rgba(255, 0, 0, 0.25);
-  border-radius: 24px;
-  padding: 35px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 0 35px rgba(255, 0, 0, 0.18);
+  padding: 30px;
+  background: #111;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(255,0,0,0.25);
 }
 
-/* Logo */
 .logo {
-  width: 130px;
+  width: 120px;
   display: block;
   margin: 0 auto 20px;
-  border-radius: 18px;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.25);
 }
 
 h1, h2 {
   text-align: center;
+  color: red;
   margin-bottom: 20px;
-  color: #ff2d2d;
-  text-shadow: 0 0 10px rgba(255,0,0,0.4);
 }
 
-/* Inputs */
 input {
   width: 100%;
-  padding: 15px;
-  margin-bottom: 14px;
-  border: none;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.06);
-  color: white;
-  font-size: 15px;
-  outline: none;
-  border: 1px solid rgba(255,0,0,0.15);
-}
-
-input:focus {
-  border-color: #ff2d2d;
-  box-shadow: 0 0 12px rgba(255,0,0,0.3);
-}
-
-/* Buttons */
-button {
-  width: 100%;
-  padding: 15px;
+  padding: 14px;
   margin-bottom: 12px;
   border: none;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: bold;
+  border-radius: 12px;
+  background: #222;
+  color: white;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s ease;
 }
 
-/* Primary Buttons */
 .primary-btn {
-  background: linear-gradient(135deg, #ff0000, #990000);
+  background: red;
   color: white;
 }
 
-.primary-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 18px rgba(255,0,0,0.45);
-}
-
-/* OAuth Buttons */
 .oauth-btn {
-  background: rgba(255,255,255,0.08);
+  background: #222;
   color: white;
-  border: 1px solid rgba(255,255,255,0.08);
 }
 
-.oauth-btn:hover {
-  background: rgba(255,0,0,0.15);
-  border-color: rgba(255,0,0,0.35);
-}
-
-/* Disabled Button */
 .disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+  opacity: .6;
 }
 
-/* Role Selection */
 .role-select {
   display: flex;
-  justify-content: space-between;
-  margin: 18px 0;
   gap: 10px;
+  margin-bottom: 15px;
 }
 
 .role-option {
   flex: 1;
-  text-align: center;
+  background: #222;
   padding: 14px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,0,0,0.15);
-  cursor: pointer;
+  border-radius: 12px;
+  text-align: center;
 }
 
-.role-option:hover {
-  background: rgba(255,0,0,0.12);
-}
-
-.role-option input {
-  margin-right: 8px;
-  width: auto;
-}
-
-/* Dashboard */
 .dashboard {
   text-align: center;
-  width: 100%;
-  max-width: 900px;
-  padding: 30px;
-}
-
-.dashboard h1 {
-  font-size: 2rem;
-}
-
-.music-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 22px;
-  margin-top: 30px;
-}
-
-.track-card {
-  background: rgba(20,20,20,0.92);
-  border: 1px solid rgba(255,0,0,0.15);
-  border-radius: 20px;
-  padding: 20px;
-  transition: 0.3s ease;
-}
-
-.track-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 22px rgba(255,0,0,0.25);
-}
-
-.track-card img {
-  width: 100%;
-  border-radius: 16px;
-  margin-bottom: 12px;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .auth-container {
-    padding: 25px;
-  }
-
-  h1 {
-    font-size: 1.6rem;
-  }
-
-  button {
-    padding: 14px;
-  }
 }
