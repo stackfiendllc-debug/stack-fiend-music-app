@@ -18,7 +18,7 @@ const password = document.getElementById("password");
 const fullname = document.getElementById("fullname");
 const role = document.getElementById("role");
 
-// ---------- SIGN UP ----------
+// ---------------- SIGN UP ----------------
 signupBtn?.addEventListener("click", async () => {
   const { error } = await supabase.auth.signUp({
     email: email.value,
@@ -28,11 +28,11 @@ signupBtn?.addEventListener("click", async () => {
   if (error) {
     alert(error.message);
   } else {
-    alert("Account created. Check your email to verify.");
+    alert("Account created successfully. Check your email to verify.");
   }
 });
 
-// ---------- LOGIN ----------
+// ---------------- LOGIN ----------------
 loginBtn?.addEventListener("click", async () => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email.value,
@@ -44,22 +44,25 @@ loginBtn?.addEventListener("click", async () => {
     return;
   }
 
-  checkProfile(data.user.id);
+  await checkProfile(data.user.id);
 });
 
-// ---------- GOOGLE LOGIN ----------
+// ---------------- GOOGLE LOGIN ----------------
 googleBtn?.addEventListener("click", async () => {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: window.location.origin
+      redirectTo: "https://stackfiendllc-debug.github.io/stack-fiend-music-app/"
     }
   });
 
-  if (error) alert(error.message);
+  if (error) {
+    console.error(error);
+    alert(error.message);
+  }
 });
 
-// ---------- PROFILE CHECK ----------
+// ---------------- PROFILE CHECK ----------------
 async function checkProfile(userId) {
   const { data } = await supabase
     .from("profiles")
@@ -75,11 +78,16 @@ async function checkProfile(userId) {
   }
 }
 
-// ---------- CREATE PROFILE ----------
+// ---------------- CREATE PROFILE ----------------
 createProfileBtn?.addEventListener("click", async () => {
   const {
     data: { user }
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    alert("User session not found.");
+    return;
+  }
 
   const { error } = await supabase.from("profiles").insert({
     id: user.id,
@@ -95,7 +103,7 @@ createProfileBtn?.addEventListener("click", async () => {
   showMusicScreen(role.value);
 });
 
-// ---------- SHOW MUSIC SCREEN ----------
+// ---------------- SHOW MUSIC SCREEN ----------------
 function showMusicScreen(userRole) {
   authScreen.classList.add("hidden");
   profileScreen.classList.add("hidden");
@@ -105,23 +113,25 @@ function showMusicScreen(userRole) {
 
   if (userRole === "artist") {
     artistTools?.classList.remove("hidden");
+  } else {
+    artistTools?.classList.add("hidden");
   }
 }
 
-// ---------- SIGN OUT ----------
+// ---------------- SIGN OUT ----------------
 signoutBtn?.addEventListener("click", async () => {
   await supabase.auth.signOut();
   location.reload();
 });
 
-// ---------- SESSION CHECK ----------
+// ---------------- SESSION INIT ----------------
 async function init() {
   const {
     data: { session }
   } = await supabase.auth.getSession();
 
   if (session?.user) {
-    checkProfile(session.user.id);
+    await checkProfile(session.user.id);
   }
 }
 
