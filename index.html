@@ -8,109 +8,66 @@
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<div class="background-glow"></div>
+
 <div class="auth-container" id="auth-screen">
   <img src="logo1.png" class="logo" />
-  <h1 class="glow-title">STACK FIEND<br>MUSIC</h1>
+  <h1>STACK FIEND</h1>
 
-  <div class="neon-box">
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
 
-    <button id="signup-btn">Sign Up</button>
-    <button id="login-btn">Login</button>
+  <button id="signup-btn">Create Account</button>
+  <button id="login-btn">Login</button>
 
-    <div class="social-buttons">
-      <button id="google-login">Continue with Google</button>
-      <button id="apple-login">Apple (Coming Soon)</button>
-    </div>
+  <div class="social-buttons">
+    <button id="google-login">Continue with Google</button>
+    <button id="apple-login">Apple (Coming Soon)</button>
   </div>
 </div>
 
-<!-- PROFILE SCREEN -->
-<div id="profile-screen" class="hidden screen">
-  <img src="logo1.png" class="logo-small" />
-  <h2 class="glow-title">CREATE PROFILE</h2>
+<div id="profile-screen" class="hidden auth-container">
+  <img src="logo1.png" class="logo" />
+  <h2>Create Profile</h2>
 
-  <div class="neon-box">
-    <input type="text" id="fullname" placeholder="Full Name" />
+  <input type="text" id="fullname" placeholder="Full Name" />
+  
+  <select id="role">
+    <option value="listener">Listener</option>
+    <option value="artist">Stack Fiend Artist</option>
+  </select>
 
-    <select id="role">
-      <option value="listener">Listener</option>
-      <option value="artist">Stack Fiend Artist</option>
-    </select>
+  <input type="file" id="profile-pic" />
 
-    <input type="file" id="profile-pic" />
-    <button id="create-profile-btn">Create Profile</button>
-  </div>
+  <button id="create-profile-btn">Create Profile</button>
 </div>
 
-<!-- MUSIC HOME -->
-<div id="music-screen" class="hidden screen">
-  <img src="logo1.png" class="logo-small" />
-  <h2 class="glow-title">STACK FIEND FEED</h2>
-
-  <div class="top-nav">
-    <button id="home-btn">Home</button>
-    <button id="account-btn">Account</button>
+<div id="music-screen" class="hidden">
+  <header class="music-header">
+    <img src="logo1.png" class="mini-logo" />
     <button id="signout-btn">Sign Out</button>
+  </header>
+
+  <h2>Welcome to Stack Fiend Music</h2>
+  <p>Exclusive content unlocked.</p>
+
+  <div id="artist-tools" class="hidden">
+    <h3>Artist Upload Portal</h3>
+    <input type="file" id="track-upload" accept="audio/*" />
+    <input type="text" id="track-title" placeholder="Track Title" />
+    <button id="upload-track-btn">Upload Track</button>
   </div>
 
-  <div class="music-grid">
-
-    <!-- TRENDING -->
-    <div class="music-card">
-      <h3>Trending Tracks</h3>
-      <p>Most streamed songs</p>
+  <div class="music-sections">
+    <div class="section-card">
+      <h3>🔥 Trending Tracks</h3>
       <div id="trending-list"></div>
     </div>
 
-    <!-- FEATURED RELEASE -->
-    <div class="music-card">
-      <h3>Featured Release</h3>
-      <p>Scheduled drops & release kits</p>
-      <div id="featured-release"></div>
+    <div class="section-card">
+      <h3>⭐ Featured Releases</h3>
+      <div id="featured-list"></div>
     </div>
-
-    <!-- ARTIST UPLOAD -->
-    <div class="music-card">
-      <h3>Artist Upload</h3>
-
-      <input type="text" id="track-title" placeholder="Track Title" />
-      <input type="text" id="artist-name" placeholder="Artist Name" />
-
-      <select id="release-type">
-        <option value="single">Single</option>
-        <option value="ep">EP</option>
-        <option value="album">Album</option>
-        <option value="featured">Featured Release</option>
-      </select>
-
-      <input type="date" id="release-date" />
-
-      <label>Cover Art</label>
-      <input type="file" id="cover-upload" accept="image/*" />
-
-      <label>Track File</label>
-      <input type="file" id="track-upload" accept="audio/*" />
-
-      <button id="upload-track-btn">Publish Release</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- ACCOUNT SCREEN -->
-<div id="account-screen" class="hidden screen">
-  <img src="logo1.png" class="logo-small" />
-  <h2 class="glow-title">ACCOUNT</h2>
-
-  <div class="neon-box">
-    <p><strong>Name:</strong> <span id="account-name"></span></p>
-    <p><strong>Email:</strong> <span id="account-email"></span></p>
-    <p><strong>Role:</strong> <span id="account-role"></span></p>
-
-    <button id="back-home-btn">Back Home</button>
   </div>
 </div>
 
