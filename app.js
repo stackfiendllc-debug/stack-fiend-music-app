@@ -3,6 +3,7 @@ import { supabase } from './supabase.js'
 const authScreen = document.getElementById('auth-screen')
 const profileScreen = document.getElementById('profile-screen')
 const musicScreen = document.getElementById('music-screen')
+const accountScreen = document.getElementById('account-screen')
 
 const email = document.getElementById('email')
 const password = document.getElementById('password')
@@ -11,8 +12,29 @@ function showScreen(screen) {
   authScreen.classList.add('hidden')
   profileScreen.classList.add('hidden')
   musicScreen.classList.add('hidden')
+  accountScreen.classList.add('hidden')
 
   screen.classList.remove('hidden')
+}
+
+async function loadAccountInfo() {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  if (!user) return
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  document.getElementById('account-email').innerText = user.email
+  document.getElementById('account-name').innerText =
+    profile?.full_name || 'No name set'
+  document.getElementById('account-role').innerText =
+    profile?.role || 'Listener'
 }
 
 async function checkUser() {
@@ -35,6 +57,7 @@ async function checkUser() {
     showScreen(profileScreen)
   } else {
     showScreen(musicScreen)
+    loadAccountInfo()
   }
 }
 
@@ -44,7 +67,6 @@ function validatePassword(passwordValue) {
   return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(passwordValue)
 }
 
-// EMAIL SIGNUP
 document.getElementById('signup-btn').onclick = async () => {
   if (!validatePassword(password.value)) {
     alert('Password needs uppercase, number, symbol')
@@ -56,28 +78,20 @@ document.getElementById('signup-btn').onclick = async () => {
     password: password.value
   })
 
-  if (error) {
-    alert(error.message)
-  } else {
-    showScreen(profileScreen)
-  }
+  if (error) alert(error.message)
+  else showScreen(profileScreen)
 }
 
-// LOGIN
 document.getElementById('login-btn').onclick = async () => {
   const { error } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: password.value
   })
 
-  if (error) {
-    alert(error.message)
-  } else {
-    checkUser()
-  }
+  if (error) alert(error.message)
+  else checkUser()
 }
 
-// GOOGLE
 document.getElementById('google-login').onclick = async () => {
   await supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -88,7 +102,6 @@ document.getElementById('google-login').onclick = async () => {
   })
 }
 
-// CREATE PROFILE
 document.getElementById('create-profile-btn').onclick = async () => {
   const fullname = document.getElementById('fullname').value
   const role = document.getElementById('role').value
@@ -101,7 +114,7 @@ document.getElementById('create-profile-btn').onclick = async () => {
     {
       id: user.id,
       full_name: fullname,
-      role: role
+      role
     }
   ])
 
@@ -111,6 +124,20 @@ document.getElementById('create-profile-btn').onclick = async () => {
   }
 
   showScreen(musicScreen)
+  loadAccountInfo()
+}
+
+document.getElementById('account-btn').onclick = () => {
+  showScreen(accountScreen)
+}
+
+document.getElementById('home-btn').onclick = () => {
+  showScreen(musicScreen)
+}
+
+document.getElementById('signout-btn').onclick = async () => {
+  await supabase.auth.signOut()
+  showScreen(authScreen)
 }
 
 supabase.auth.onAuthStateChange(() => {
