@@ -143,3 +143,24 @@ document.getElementById('signout-btn').onclick = async () => {
 supabase.auth.onAuthStateChange(() => {
   checkUser()
 })
+document.getElementById('account-btn').onclick = () => {
+  loadAccountInfo()
+  showScreen(accountScreen)
+}
+
+document.getElementById('back-home-btn').onclick = () => {
+  showScreen(musicScreen)
+}
+
+document.getElementById('home-btn').onclick = () => {
+  showScreen(musicScreen)
+}
+
+document.getElementById('signout-btn').onclick = async () => {
+  await supabase.auth.signOut()
+  showScreen(authScreen)
+}
+
+document.getElementById('upload-track-btn').onclick = async () => {
+  alert('Track upload enabled. Connect Supabase storage next.')
+}
