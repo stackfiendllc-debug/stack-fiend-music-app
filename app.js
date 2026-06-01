@@ -1,89 +1,68 @@
 import { supabase } from './supabase.js'
 
 const authScreen = document.getElementById('auth-screen')
-const signupScreen = document.getElementById('signup-screen')
-const dashboardScreen = document.getElementById('dashboard-screen')
+const profileScreen = document.getElementById('profile-screen')
+const musicScreen = document.getElementById('music-screen')
 
-function showScreen(screen) {
-  authScreen.style.display = 'none'
-  signupScreen.style.display = 'none'
-  dashboardScreen.style.display = 'none'
-  screen.style.display = 'flex'
-}
-
-showScreen(authScreen)
+const email = document.getElementById('email')
+const password = document.getElementById('password')
 
 function validatePassword(password) {
-  return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(password)
+  const strongPassword =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
+  return strongPassword.test(password)
 }
 
-// Create account
-document.getElementById('create-account-btn').onclick = () => {
-  showScreen(signupScreen)
-}
-
-// Signup
-document.getElementById('signup-submit').onclick = async () => {
-  const name = document.getElementById('signup-name').value
-  const email = document.getElementById('signup-email').value
-  const password = document.getElementById('signup-password').value
-  const role = document.querySelector('input[name="role"]:checked')?.value
-
-  if (!validatePassword(password)) {
-    alert('Password needs capital letter, number, symbol.')
+document.getElementById('signup-btn').onclick = async () => {
+  if (!validatePassword(password.value)) {
+    alert(
+      'Password must contain 1 uppercase letter, 1 number, 1 symbol, minimum 8 characters'
+    )
     return
   }
 
   const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { name, role }
-    }
+    email: email.value,
+    password: password.value
   })
 
   if (error) {
     alert(error.message)
   } else {
-    alert('Account created. Check email.')
-    showScreen(authScreen)
+    authScreen.classList.add('hidden')
+    profileScreen.classList.remove('hidden')
   }
 }
 
-// Login
 document.getElementById('login-btn').onclick = async () => {
-  const email = document.getElementById('login-email').value
-  const password = document.getElementById('login-password').value
-
   const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
+    email: email.value,
+    password: password.value
   })
 
   if (error) {
     alert(error.message)
   } else {
-    showScreen(dashboardScreen)
+    authScreen.classList.add('hidden')
+    musicScreen.classList.remove('hidden')
   }
 }
 
-// Google
 document.getElementById('google-login').onclick = async () => {
   await supabase.auth.signInWithOAuth({
-    provider: 'google'
+    provider: 'google',
+    options: {
+      redirectTo:
+        'https://stackfiendllc-debug.github.io/stack-fiend-music-app/'
+    }
   })
 }
 
-// Apple
 document.getElementById('apple-login').onclick = () => {
-  alert('Apple Sign-In Coming Soon 🚀')
+  alert('Apple Sign In Coming Soon')
 }
 
-// Phone
-document.getElementById('phone-login').onclick = async () => {
-  const phone = prompt('Enter phone number')
-
-  if (!phone) return
-
-  await supabase.auth.signInWithOtp({ phone })
+document.getElementById('create-profile-btn').onclick = () => {
+  profileScreen.classList.add('hidden')
+  musicScreen.classList.remove('hidden')
 }
