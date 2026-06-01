@@ -7,6 +7,8 @@ const supabase = window.supabase.createClient(
   SUPABASE_KEY
 );
 
+console.log("Stack Fiend loaded");
+
 let selectedRole = "listener";
 
 function showSignupForm() {
@@ -30,13 +32,17 @@ async function completeSignup() {
   const username = document.getElementById("username").value;
 
   if (!validatePassword(password)) {
-    alert("Password needs uppercase, number, symbol.");
+    alert("Password must include uppercase, number, symbol.");
     return;
   }
 
   const { data, error } = await supabase.auth.signUp({
     email,
-    password
+    password,
+    options: {
+      emailRedirectTo:
+        "https://stackfiendllc-debug.github.io/stack-fiend-music-app/"
+    }
   });
 
   if (error) {
@@ -54,7 +60,7 @@ async function completeSignup() {
     }
   ]);
 
-  alert("Signup complete. Confirm email.");
+  alert("Account created. Check email to confirm.");
 }
 
 async function signIn() {
@@ -79,15 +85,27 @@ async function signIn() {
 }
 
 async function googleLogin() {
-  await supabase.auth.signInWithOAuth({
-    provider: "google"
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo:
+        "https://stackfiendllc-debug.github.io/stack-fiend-music-app/"
+    }
   });
+
+  if (error) alert(error.message);
 }
 
 async function appleLogin() {
-  await supabase.auth.signInWithOAuth({
-    provider: "apple"
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "apple",
+    options: {
+      redirectTo:
+        "https://stackfiendllc-debug.github.io/stack-fiend-music-app/"
+    }
   });
+
+  if (error) alert(error.message);
 }
 
 async function uploadTrack() {
@@ -98,17 +116,26 @@ async function uploadTrack() {
     return;
   }
 
-  await supabase.storage
+  const fileName = Date.now() + "-" + file.name;
+
+  const { error } = await supabase.storage
     .from("music")
-    .upload(Date.now() + "-" + file.name, file);
+    .upload(fileName, file);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
   loadTracks();
 }
 
 async function loadTracks() {
-  const { data } = await supabase.storage
+  const { data, error } = await supabase.storage
     .from("music")
     .list();
+
+  if (error) return;
 
   const trackList = document.getElementById("trackList");
 
