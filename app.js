@@ -7,31 +7,47 @@ const musicScreen = document.getElementById('music-screen')
 const email = document.getElementById('email')
 const password = document.getElementById('password')
 
-// Check session after OAuth redirect
-async function checkSession() {
+function showScreen(screen) {
+  authScreen.classList.add('hidden')
+  profileScreen.classList.add('hidden')
+  musicScreen.classList.add('hidden')
+
+  screen.classList.remove('hidden')
+}
+
+async function checkUser() {
   const {
     data: { session }
   } = await supabase.auth.getSession()
 
-  if (session) {
-    authScreen.classList.add('hidden')
-    profileScreen.classList.add('hidden')
-    musicScreen.classList.remove('hidden')
+  if (!session) {
+    showScreen(authScreen)
+    return
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single()
+
+  if (!profile) {
+    showScreen(profileScreen)
+  } else {
+    showScreen(musicScreen)
   }
 }
 
-checkSession()
+checkUser()
 
 function validatePassword(passwordValue) {
   return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(passwordValue)
 }
 
-// Create account
+// EMAIL SIGNUP
 document.getElementById('signup-btn').onclick = async () => {
   if (!validatePassword(password.value)) {
-    alert(
-      'Password must include:\n• 1 uppercase letter\n• 1 number\n• 1 symbol\n• minimum 8 characters'
-    )
+    alert('Password needs uppercase, number, symbol')
     return
   }
 
@@ -42,14 +58,12 @@ document.getElementById('signup-btn').onclick = async () => {
 
   if (error) {
     alert(error.message)
-    return
+  } else {
+    showScreen(profileScreen)
   }
-
-  authScreen.classList.add('hidden')
-  profileScreen.classList.remove('hidden')
 }
 
-// Login
+// LOGIN
 document.getElementById('login-btn').onclick = async () => {
   const { error } = await supabase.auth.signInWithPassword({
     email: email.value,
@@ -58,44 +72,47 @@ document.getElementById('login-btn').onclick = async () => {
 
   if (error) {
     alert(error.message)
-    return
+  } else {
+    checkUser()
   }
-
-  authScreen.classList.add('hidden')
-  musicScreen.classList.remove('hidden')
 }
 
-// Google OAuth
+// GOOGLE
 document.getElementById('google-login').onclick = async () => {
-  const { error } = await supabase.auth.signInWithOAuth({
+  await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: 'https://stackfiendllc-debug.github.io/stack-fiend-music-app/'
+      redirectTo:
+        'https://stackfiendllc-debug.github.io/stack-fiend-music-app/'
     }
   })
+}
+
+// CREATE PROFILE
+document.getElementById('create-profile-btn').onclick = async () => {
+  const fullname = document.getElementById('fullname').value
+  const role = document.getElementById('role').value
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  const { error } = await supabase.from('profiles').insert([
+    {
+      id: user.id,
+      full_name: fullname,
+      role: role
+    }
+  ])
 
   if (error) {
     alert(error.message)
+    return
   }
+
+  showScreen(musicScreen)
 }
 
-// Apple placeholder
-document.getElementById('apple-login').onclick = () => {
-  alert('Apple Sign In Coming Soon')
-}
-
-// Profile setup
-document.getElementById('create-profile-btn').onclick = async () => {
-  authScreen.classList.add('hidden')
-  profileScreen.classList.add('hidden')
-  musicScreen.classList.remove('hidden')
-}
-
-// Listen for auth changes
-supabase.auth.onAuthStateChange((event, session) => {
-  if (session) {
-    authScreen.classList.add('hidden')
-    profileScreen.classList.add('hidden')
-    musicScreen.classList.remove('hidden')
-  }
+supabase.auth.onAuthStateChange(() => {
+  checkUser()
 })
