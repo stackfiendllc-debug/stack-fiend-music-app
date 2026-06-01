@@ -1,60 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stack Fiend Music</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
 
-<div class="container">
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="screen">
+    <div class="auth-container">
+      <img src="logo.jpeg" class="logo" alt="Stack Fiend Logo">
 
-<header>
-  <img src="logo1.png" class="logo">
-  <h1>STACK FIEND MUSIC</h1>
-</header>
+      <h1>Stack Fiend Music</h1>
 
-<section id="auth-section">
-  <input type="email" id="email" placeholder="Email">
+      <input id="login-email" type="email" placeholder="Email">
+      <input id="login-password" type="password" placeholder="Password">
 
-  <input type="password" id="password"
-    placeholder="Strong Password">
+      <button id="login-btn" class="primary-btn">Login</button>
+      <button id="create-account-btn" class="primary-btn">Create Account</button>
 
-  <button onclick="showSignupForm()">Create Account</button>
-  <button onclick="signIn()">Login</button>
+      <button id="google-login" class="oauth-btn">Sign in with Google</button>
+      <button id="apple-login" class="oauth-btn disabled">Apple (Coming Soon)</button>
+      <button id="phone-login" class="oauth-btn">Phone Login</button>
+    </div>
+  </div>
 
-  <button onclick="googleLogin()">Google Login</button>
-  <button onclick="appleLogin()">Apple Login</button>
-</section>
+  <!-- SIGNUP SCREEN -->
+  <div id="signup-screen" class="screen">
+    <div class="auth-container">
+      <h2>Create Profile</h2>
 
-<section id="signup-details" class="hidden">
-  <input type="text" id="fullName" placeholder="Full Name">
-  <input type="text" id="username" placeholder="Username">
+      <input id="signup-name" type="text" placeholder="Full Name">
+      <input id="signup-email" type="email" placeholder="Email">
+      <input id="signup-password" type="password" placeholder="Strong Password">
 
-  <input type="file" id="profileImage" accept="image/*">
+      <div class="role-select">
+        <label class="role-option">
+          <input type="radio" name="role" value="listener">
+          Listener
+        </label>
 
-  <button onclick="selectRole('listener')">Listener</button>
-  <button onclick="selectRole('artist')">Stack Fiend Artist</button>
+        <label class="role-option">
+          <input type="radio" name="role" value="artist">
+          Artist
+        </label>
+      </div>
 
-  <button onclick="completeSignup()">Confirm Signup</button>
-</section>
+      <button id="signup-submit" class="primary-btn">Create Profile</button>
+    </div>
+  </div>
 
-<section id="upload-section" class="hidden">
-  <input type="text" id="trackTitle" placeholder="Track Title">
-  <input type="file" id="musicFile" accept="audio/*">
-  <button onclick="uploadTrack()">Upload</button>
-</section>
+  <!-- DASHBOARD -->
+  <div id="dashboard-screen" class="screen">
+    <div class="dashboard">
+      <img src="logo.jpeg" class="logo">
 
-<section id="tracks-section" class="hidden">
-  <div id="trackList"></div>
-</section>
+      <h1>Welcome to Stack Fiend Music</h1>
+      <p>Exclusive artist content unlocked.</p>
+    </div>
+  </div>
 
-</div>
-
-<script src="supabase.js"></script>
-<script src="app.js"></script>
+  <script type="module" src="supabase.js?v=5"></script>
+  <script type="module" src="app.js?v=5"></script>
 
 </body>
 </html>
