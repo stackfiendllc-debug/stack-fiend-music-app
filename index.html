@@ -8,44 +8,65 @@
 </head>
 <body>
 
-<div class="auth-container" id="auth-screen">
-  <img src="logo1.png" class="logo" />
-  <h1>STACK FIEND</h1>
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="screen">
+    <img src="logo1.png" class="logo" />
 
-  <input type="email" id="email" placeholder="Email" />
-  <input type="password" id="password" placeholder="Password" />
+    <h1>Stack Fiend Music</h1>
 
-  <button id="signup-btn">Create Account</button>
-  <button id="login-btn">Login</button>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
 
-  <div class="social-buttons">
+    <button id="signup-btn">Sign Up</button>
+    <button id="login-btn">Login</button>
     <button id="google-login">Continue with Google</button>
-    <button id="apple-login">Apple (Coming Soon)</button>
   </div>
-</div>
 
-<div id="profile-screen" class="hidden">
-  <h2>Create Profile</h2>
+  <!-- PROFILE SCREEN -->
+  <div id="profile-screen" class="screen hidden">
+    <img src="logo1.png" class="logo" />
 
-  <input type="text" id="fullname" placeholder="Full Name" />
-  
-  <select id="role">
-    <option value="listener">Listener</option>
-    <option value="artist">Stack Fiend Artist</option>
-  </select>
+    <h2>Create Profile</h2>
 
-  <input type="file" id="profile-pic" />
+    <input type="text" id="fullname" placeholder="Full Name" />
 
-  <button id="create-profile-btn">Create Profile</button>
-</div>
+    <select id="role">
+      <option value="listener">Listener</option>
+      <option value="artist">Artist</option>
+    </select>
 
-<div id="music-screen" class="hidden">
-  <h2>Welcome to Stack Fiend Music</h2>
-  <p>Exclusive content unlocked.</p>
-</div>
+    <button id="create-profile-btn">Create Profile</button>
+  </div>
 
-<script type="module" src="supabase.js"></script>
-<script type="module" src="app.js"></script>
+  <!-- MUSIC HOME -->
+  <div id="music-screen" class="screen hidden">
+    <img src="logo1.png" class="logo-small" />
 
+    <h2>Music Feed</h2>
+
+    <div class="feed">
+      <div class="track-card">🔥 Trending Track</div>
+      <div class="track-card">🎵 New Artist Upload</div>
+      <div class="track-card">⭐ Featured Release</div>
+    </div>
+
+    <button id="account-btn">Account</button>
+  </div>
+
+  <!-- ACCOUNT SCREEN -->
+  <div id="account-screen" class="screen hidden">
+    <img src="logo1.png" class="logo-small" />
+
+    <h2>Account</h2>
+
+    <p>Name: <span id="account-name"></span></p>
+    <p>Email: <span id="account-email"></span></p>
+    <p>Role: <span id="account-role"></span></p>
+
+    <button id="home-btn">Home</button>
+    <button id="signout-btn">Sign Out</button>
+  </div>
+
+  <script type="module" src="app.js"></script>
 </body>
 </html>
