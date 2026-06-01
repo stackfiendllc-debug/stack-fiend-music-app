@@ -1,152 +1,158 @@
-const SUPABASE_URL = "https://wtetpifsildutbomreds.supabase.co";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js'
 
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZXRwaWZzaWxkdXRib21yZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTk4NTcsImV4cCI6MjA5NTgzNTg1N30.rMCPUyF-dVmKaUAtGSVKfbz4BhI4NxxEwXxgWe2Fg0w";
+const supabaseUrl = 'https://wtetpifsildutbomreds.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZXRwaWZzaWxkdXRib21yZWRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNTk4NTcsImV4cCI6MjA5NTgzNTg1N30.rMCPUyF-dVmKaUAtGSVKfbz4BhI4NxxEwXxgWe2Fg0w'
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-console.log("Stack Fiend loaded");
+// Screens
+const authScreen = document.getElementById('auth-screen')
+const signupScreen = document.getElementById('signup-screen')
+const dashboardScreen = document.getElementById('dashboard-screen')
 
-let selectedRole = "listener";
-
-function showSignupForm() {
-  document.getElementById("auth-section").classList.add("hidden");
-  document.getElementById("signup-details").classList.remove("hidden");
+// Screen Switcher
+function showScreen(screen) {
+  authScreen.style.display = 'none'
+  signupScreen.style.display = 'none'
+  dashboardScreen.style.display = 'none'
+  screen.style.display = 'flex'
 }
 
-function selectRole(role) {
-  selectedRole = role;
-  alert(role + " selected");
-}
-
+// Password Validation
 function validatePassword(password) {
-  return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(password);
+  const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/
+  return regex.test(password)
 }
 
-async function completeSignup() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const fullName = document.getElementById("fullName").value;
-  const username = document.getElementById("username").value;
+// =========================
+// CREATE ACCOUNT
+// =========================
+document.getElementById('create-account-btn').addEventListener('click', () => {
+  showScreen(signupScreen)
+})
 
-  if (!validatePassword(password)) {
-    alert("Password must include uppercase, number, symbol.");
-    return;
+// =========================
+// SIGNUP SUBMIT
+// =========================
+document.getElementById('signup-submit').addEventListener('click', async () => {
+  const name = document.getElementById('signup-name').value
+  const email = document.getElementById('signup-email').value
+  const password = document.getElementById('signup-password').value
+  const role = document.querySelector('input[name="role"]:checked')?.value
+
+  if (!name || !email || !password || !role) {
+    alert('Fill out all fields')
+    return
   }
 
-  const { data, error } = await supabase.auth.signUp({
+  if (!validatePassword(password)) {
+    alert('Password must include:\n• 1 capital letter\n• 1 number\n• 1 symbol\n• 8+ characters')
+    return
+  }
+
+  const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo:
-        "https://stackfiendllc-debug.github.io/stack-fiend-music-app/"
+      data: {
+        full_name: name,
+        role: role
+      },
+      emailRedirectTo: 'https://stackfiendllc-debug.github.io/stack-fiend-music-app/'
     }
-  });
+  })
 
   if (error) {
-    alert(error.message);
-    return;
+    alert(error.message)
+    return
   }
 
-  await supabase.from("users").insert([
-    {
-      id: data.user.id,
-      full_name: fullName,
-      username,
-      role: selectedRole,
-      approved: selectedRole === "listener"
+  alert('Check your email to confirm your account.')
+  showScreen(authScreen)
+})
+
+// =========================
+// GOOGLE LOGIN
+// =========================
+document.getElementById('google-login').addEventListener('click', async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: 'https://stackfiendllc-debug.github.io/stack-fiend-music-app/'
     }
-  ]);
+  })
 
-  alert("Account created. Check email to confirm.");
-}
+  if (error) alert(error.message)
+})
 
-async function signIn() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+// =========================
+// APPLE LOGIN (COMING SOON)
+// =========================
+document.getElementById('apple-login').addEventListener('click', () => {
+  alert('Apple Sign-In Coming Soon 🚀')
+})
+
+// =========================
+// PHONE LOGIN
+// =========================
+document.getElementById('phone-login').addEventListener('click', async () => {
+  const phone = prompt('Enter your phone number')
+
+  if (!phone) return
+
+  const { error } = await supabase.auth.signInWithOtp({
+    phone
+  })
+
+  if (error) {
+    alert(error.message)
+  } else {
+    alert('OTP sent to your phone.')
+  }
+})
+
+// =========================
+// EMAIL LOGIN
+// =========================
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value
+  const password = document.getElementById('login-password').value
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password
-  });
+  })
 
   if (error) {
-    alert(error.message);
-    return;
+    alert(error.message)
+    return
   }
 
-  document.getElementById("auth-section").classList.add("hidden");
-  document.getElementById("signup-details").classList.add("hidden");
-  document.getElementById("tracks-section").classList.remove("hidden");
+  showScreen(dashboardScreen)
+})
 
-  loadTracks();
-}
-
-async function googleLogin() {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo:
-        "https://stackfiendllc-debug.github.io/stack-fiend-music-app/"
-    }
-  });
-
-  if (error) alert(error.message);
-}
-
-async function appleLogin() {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "apple",
-    options: {
-      redirectTo:
-        "https://stackfiendllc-debug.github.io/stack-fiend-music-app/"
-    }
-  });
-
-  if (error) alert(error.message);
-}
-
-async function uploadTrack() {
-  const file = document.getElementById("musicFile").files[0];
-
-  if (!file) {
-    alert("Select a file");
-    return;
+// =========================
+// AUTH STATE CHECK
+// =========================
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    showScreen(dashboardScreen)
+  } else {
+    showScreen(authScreen)
   }
+})
 
-  const fileName = Date.now() + "-" + file.name;
+// =========================
+// INITIAL LOAD
+// =========================
+async function init() {
+  const { data: { session } } = await supabase.auth.getSession()
 
-  const { error } = await supabase.storage
-    .from("music")
-    .upload(fileName, file);
-
-  if (error) {
-    alert(error.message);
-    return;
+  if (session) {
+    showScreen(dashboardScreen)
+  } else {
+    showScreen(authScreen)
   }
-
-  loadTracks();
 }
 
-async function loadTracks() {
-  const { data, error } = await supabase.storage
-    .from("music")
-    .list();
-
-  if (error) return;
-
-  const trackList = document.getElementById("trackList");
-
-  trackList.innerHTML = "";
-
-  data.forEach(track => {
-    trackList.innerHTML += `
-      <div class="track-card">
-        <p>${track.name}</p>
-        <audio controls src="${SUPABASE_URL}/storage/v1/object/public/music/${track.name}"></audio>
-      </div>
-    `;
-  });
-}
+init()
